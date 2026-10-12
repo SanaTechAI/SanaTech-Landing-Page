@@ -1,10 +1,11 @@
 {
- "brand": "SanaTech",
- "url": "",
- "WHATSAPP_NUMBER": "",
- "CONTACT_EMAIL": "",
- "INSTAGRAM_URL": "",
- "message": "Olá, SanaTech! Quero conversar sobre as dores digitais da minha empresa.",
- "title": "SanaTech | Consultoria em IA e saúde digital",
- "description": "Consultoria em IA, automações, sites e segurança digital. Conheça os planos da SanaTech e encontre o próximo passo para sua empresa."
+  "brand": "SanaTech",
+  "url": "https://sanatech-landing-page.edulazaro2008.workers.dev/",
+  "WHATSAPP_NUMBER": "",
+  "CONTACT_EMAIL": "sana.tech.ai2026@gmail.com",
+  "INSTAGRAM_URL": "",
+  "message": "Olá, SanaTech! Quero agendar minha avaliação gratuita de 30 a 45 minutos. Minha empresa é: ",
+  "title": "SanaTech | IA e automação — avaliação gratuita",
+  "description": "Simplifique a rotina da sua empresa com IA, automações e sites. Avaliação gratuita de 30 a 45 minutos, com soluções sob medida e implementação pela SanaTech.",
+  "year": 2026
 }
