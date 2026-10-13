@@ -1,1 +1,36 @@
-@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{transition:none!important;animation:none!important}.journey-visual{position:relative;top:0}}
+/* Content stays visible without JavaScript; only observed elements animate. */
+.reveal-pending{opacity:0;transform:translateY(20px);transition:opacity 700ms ease,transform 700ms cubic-bezier(.2,.7,.2,1);transition-delay:var(--reveal-delay,0ms)}
+.reveal-pending.is-visible,.reveal-pending:focus-within{opacity:1;transform:none}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{transition:none!important;animation:none!important}.reveal-pending{opacity:1;transform:none}}
+/* A short ambient entrance adds depth without continuous motion. */
+.hero{position:relative;isolation:isolate;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:-12%;z-index:0;pointer-events:none;background:radial-gradient(ellipse at 85% 30%,#03a6a62e,transparent 52%),radial-gradient(ellipse at 12% 95%,#0511f226,transparent 48%);animation:ambient-arrival 4.5s ease-out both}
+.hero>.container{position:relative;z-index:1}
+@keyframes ambient-arrival{from{opacity:0;transform:translate3d(24px,16px,0) scale(1.06)}to{opacity:1;transform:none}}
+.evaluation-card{animation:card-arrival 750ms cubic-bezier(.2,.7,.2,1) both}
+@keyframes card-arrival{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+.status-dot{animation:gentle-signal 2.2s ease-out 2}
+@keyframes gentle-signal{0%,100%{box-shadow:0 0 0 0 #087a7c00}35%{box-shadow:0 0 0 7px #087a7c20}75%{box-shadow:0 0 0 11px #087a7c00}}
+.button{transition:background 220ms ease,transform 220ms ease,box-shadow 220ms ease}
+.button span[aria-hidden]{display:inline-block;transition:transform 250ms ease}
+.button:hover span[aria-hidden],.button:focus-visible span[aria-hidden]{transform:translate(3px,-3px)}
+.button:active{transform:translateY(0) scale(.985)}
+.nav-links a{position:relative}
+.nav-links a::after{content:'';position:absolute;left:0;right:0;bottom:5px;height:2px;background:var(--teal);transform:scaleX(0);transform-origin:left;transition:transform 250ms ease}
+.nav-links a:hover::after,.nav-links a:focus-visible::after{transform:scaleX(1)}
+.service-symbol{transform-origin:left center;transition:transform 300ms ease,color 300ms ease}
+.reading-progress{position:absolute;left:0;right:0;bottom:-1px;height:3px;background:linear-gradient(90deg,var(--teal),var(--cyan));transform:scaleX(0);transform-origin:left;pointer-events:none}
+@media(hover:hover) and (pointer:fine){
+ .service-grid article{transition:border-color 300ms ease,opacity 700ms ease,transform 300ms ease;transition-delay:0ms}
+ .service-grid article:hover{border-color:var(--teal)}
+ .service-grid article:not(.reveal-pending):hover,.service-grid article.is-visible:hover{transform:translateY(-5px)}
+ .service-grid article:hover .service-symbol{transform:rotate(-8deg) scale(1.1);color:var(--navy)}
+ .button:hover{box-shadow:0 8px 22px #03a6a624}
+ .contact-options a strong{transition:color 220ms ease,transform 220ms ease}
+ .contact-options a:hover strong{color:var(--cyan);transform:translateX(4px)}
+}
+@media(prefers-reduced-motion:reduce){
+ .hero::before,.evaluation-card,.status-dot{animation:none!important}
+ .reading-progress{display:none}
+ .button:hover,.button:active,.button:focus-visible span[aria-hidden],.button:hover span[aria-hidden],.service-grid article.is-visible:hover,.service-grid article:not(.reveal-pending):hover,.service-grid article:hover .service-symbol,.contact-options a:hover strong{transform:none}
+}

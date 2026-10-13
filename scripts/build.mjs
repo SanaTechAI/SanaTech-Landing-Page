@@ -12,10 +12,12 @@ export function contactValues(c){
  if(instagram){const u=new URL(instagram);if(u.protocol!=='https:'||!['instagram.com','www.instagram.com'].includes(u.hostname)||u.username||u.password)throw Error('INSTAGRAM_URL: use um perfil HTTPS do Instagram.');}
  const ext='target="_blank" rel="noopener noreferrer"';
  const emailHref=email?'mailto:'+email+'?subject='+encodeURIComponent('Avaliação gratuita de 30 a 45 minutos — SanaTech')+'&body='+encodeURIComponent(c.message||'Olá, SanaTech! Quero agendar minha avaliação gratuita de 30 a 45 minutos.'):'#contato';
- const contactHref=emailHref;
+
  const whatsappHref=phone?'https://wa.me/'+phone+'?text='+encodeURIComponent(c.message||''):'';
- const optionalContacts=(phone?`<a href="${esc(whatsappHref)}" ${ext}><strong>WhatsApp ↗</strong><small>${esc('+'+phone)}</small></a>`:'')+(instagram?`<a href="${esc(instagram)}" ${ext}><strong>Instagram ↗</strong><small>Conheça a SanaTech</small></a>`:'');
- return {initialHref:esc(contactHref),whatsappAttrs:'',emailHref:esc(emailHref),emailLabel:email?esc(email):'Canal em preparação',optionalContacts,contactChannel:'seu aplicativo de e-mail'};
+ const contactHref=whatsappHref||emailHref;
+ const phoneLabel=/^55\d{11}$/.test(phone)?'+55 ('+phone.slice(2,4)+') '+phone.slice(4,9)+'-'+phone.slice(9):'+'+phone;
+ const optionalContacts=(phone?`<a href="${esc(whatsappHref)}" ${ext}><strong>WhatsApp <span aria-hidden="true">↗</span></strong><small>${esc(phoneLabel)}</small></a>`:'')+(instagram?`<a href="${esc(instagram)}" ${ext}><strong>Instagram <span aria-hidden="true">↗</span></strong><small>Conheça a SanaTech</small></a>`:'');
+ return {initialHref:esc(contactHref),whatsappAttrs:'',emailHref:esc(emailHref),emailLabel:email?esc(email):'Canal em preparação',optionalContacts,contactChannel:phone?'o WhatsApp':'seu aplicativo de e-mail'};
 }
 export async function build(){
  const config=JSON.parse(await readFile(path.join(root,'site.config.json'),'utf8'));
@@ -25,7 +27,7 @@ export async function build(){
  let url='';if(config.url){const u=new URL(config.url);if(u.protocol!=='https:'||u.username||u.password||u.search||u.hash)throw Error('Informe domínio HTTPS válido.');url=u.href.replace(/\/$/,'')+'/';}
  const pending=['WHATSAPP_NUMBER','CONTACT_EMAIL','INSTAGRAM_URL'].filter(k=>!config[k]);
  if(production&&(!url||pending.length===3))throw Error('Para publicar, configure url e pelo menos um canal de contato.');
- const values={...Object.fromEntries(Object.entries(config).filter(([,v])=>typeof v==='string').map(([k,v])=>[k,esc(v)])),...contactValues(config),year:config.year,logoSrc:'data:image/png;base64,'+(await readFile(path.join(root,'assets/logo-brain.png'))).toString('base64'),url:esc(url),socialImage:esc(url+'assets/logo-brain.png'),robots:production?'index, follow, max-image-preview:large':'noindex, nofollow',socialMeta:url?`<link rel="canonical" href="${esc(url)}"><meta property="og:url" content="${esc(url)}"><meta property="og:image" content="${esc(url)}assets/logo-brain.png"><meta property="og:image:alt" content="Símbolo do cérebro SanaTech">`:'',schema:JSON.stringify({'@context':'https://schema.org','@type':'Organization',name:'SanaTech',...(config.CONTACT_EMAIL?{email:config.CONTACT_EMAIL}:{}),...(url?{url,logo:url+'assets/logo-brain.png'}:{})}).replace(/</g,'\\u003c')};
+ const values={...Object.fromEntries(Object.entries(config).filter(([,v])=>typeof v==='string').map(([k,v])=>[k,esc(v)])),...contactValues(config),year:config.year,logoSrc:'data:image/png;base64,'+(await readFile(path.join(root,'assets/logo-brain.png'))).toString('base64'),url:esc(url),socialImage:esc(url+'assets/logo-brain.png'),robots:production?'index, follow, max-image-preview:large':'noindex, nofollow',socialMeta:url?`<link rel="canonical" href="${esc(url)}"><meta property="og:url" content="${esc(url)}"><meta property="og:image" content="${esc(url)}assets/logo-brain.png"><meta property="og:image:alt" content="Símbolo do cérebro SanaTech">`:'',schema:JSON.stringify({'@context':'https://schema.org','@type':'Organization',name:'SanaTech',...(config.CONTACT_EMAIL?{email:config.CONTACT_EMAIL}:{}),...(config.WHATSAPP_NUMBER?{telephone:'+'+config.WHATSAPP_NUMBER}:{}),...(url?{url,logo:url+'assets/logo-brain.png'}:{})}).replace(/</g,'\\u003c')};
  const source=await readFile(path.join(root,'src/index.html'),'utf8');
  const render=(markup,v)=>{
   for(const [marker,attribute] of [['content','content'],['href','href'],['src','src']]){
