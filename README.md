@@ -17,7 +17,7 @@ Abra http://127.0.0.1:4173. Você também pode abrir `src/index.html` diretament
 
 ## Configuração
 
-`site.config.json` contém o endereço https://sanatech-landing-page.edulazaro2008.workers.dev/ e o contato sana.tech.ai2026@gmail.com. WhatsApp e Instagram continuam opcionais: enquanto vazios, seus canais não aparecem. O WhatsApp configurado é o contato principal. Sem ele, os botões usam o e-mail. `year` fixa o ano do rodapé em 2026.
+`site.config.json` contém o endereço https://sanatechia.com.br/ e o contato sana.tech.ai2026@gmail.com. WhatsApp e Instagram continuam opcionais: enquanto vazios, seus canais não aparecem. O WhatsApp configurado é o contato principal. Sem ele, os botões usam o e-mail. `year` fixa o ano do rodapé em 2026.
 
 ## Conteúdo e marca
 
@@ -44,3 +44,7 @@ Os testes verificam 12 larguras de 320 a 1920 px, texto ampliado em 200%, carreg
 `src/styles/motion.css` define o fade-in de 700 ms com deslocamento vertical de 20 px. `src/scripts/reveal.js` usa IntersectionObserver para revelar o conteúdo uma única vez, com pequenos intervalos entre cartões. O conteúdo inicial permanece visível. Sem JavaScript, sem IntersectionObserver ou com movimento reduzido, o conteúdo fica acessível sem animação.
 
 O destaque inicial também tem iluminação e entrada suaves, executadas uma vez. Botões, setas, links de navegação e cartões respondem ao cursor e ao foco. `src/scripts/effects.js` atualiza uma linha discreta de progresso da leitura via requestAnimationFrame; ela é decorativa e desativada com movimento reduzido. Não há efeitos de cursor nem movimento contínuo no conteúdo.
+
+## Domínio próprio
+
+A URL principal é https://sanatechia.com.br/. `wrangler.json` prepara o domínio personalizado e os arquivos de `dist/` para o Cloudflare Worker. A associação do domínio na conta e o deploy ainda precisam ser realizados. Consulte `docs/dominio-proprio.md`.
