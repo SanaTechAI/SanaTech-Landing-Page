@@ -1,6 +1,6 @@
 # SanaTech — landing page
 
-Página estática em português, com foco na avaliação gratuita de 30 a 45 minutos, soluções e implementação. Sem preços, formulário ou rastreamento. Os botões abrem o WhatsApp +55 (11) 99239-9230 com uma mensagem pronta para a avaliação gratuita; o visitante envia a mensagem e o horário é combinado depois. O e-mail continua como alternativa.
+Página estática em português, com foco na avaliação gratuita de 30 a 45 minutos, soluções e implementação. Sem preços ou formulário. Tag-base Google Ads AW-18525878213 instalada. Os botões abrem o WhatsApp +55 (11) 99239-9230 com uma mensagem pronta para a avaliação gratuita; o visitante envia a mensagem e o horário é combinado depois. O e-mail continua como alternativa.
 
 ## Revisar localmente
 
@@ -37,7 +37,7 @@ A antiga animação em `src/scripts/motion.js` permanece como arquivo de referê
 
 Com Playwright e Chrome disponíveis, mantenha a prévia aberta e execute `npm test`. `PLAYWRIGHT_PATH` permite indicar um pacote externo, e `TEST_URL` muda a URL da prévia.
 
-Os testes verificam 12 larguras de 320 a 1920 px, texto ampliado em 200%, carregamento de fontes e imagens, menu e teclado, âncoras, favicons, mensagens de e-mail, contatos opcionais, ausência de preços, metadados de produção, movimento reduzido e leitura sem JavaScript. A página foi preparada com uma oferta e chamada para ação claras; resultados de anúncios e conversões precisam ser medidos após publicação. Não há tags de Google Ads ou Analytics configuradas.
+Os testes verificam 12 larguras de 320 a 1920 px, texto ampliado em 200%, carregamento de fontes e imagens, menu e teclado, âncoras, favicons, mensagens de e-mail, contatos opcionais, ausência de preços, metadados de produção, movimento reduzido e leitura sem JavaScript. A página foi preparada com uma oferta e chamada para ação claras; resultados de anúncios e conversões precisam ser medidos após publicação. A tag-base Google Ads AW-18525878213 está instalada; o evento de conversão do WhatsApp e o Google Analytics ainda não estão configurados.
 
 ## Animações ao rolar
 
@@ -48,3 +48,9 @@ O destaque inicial também tem iluminação e entrada suaves, executadas uma vez
 ## Domínio próprio
 
 A URL principal é https://sanatechia.com.br/. `wrangler.json` prepara o domínio personalizado e os arquivos de `dist/` para o Cloudflare Worker. A associação do domínio na conta e o deploy ainda precisam ser realizados. Consulte `docs/dominio-proprio.md`.
+
+## Segurança
+
+O build publica uma lista explícita de arquivos, recria `dist/` e gera `_headers` para o Cloudflare Workers Static Assets. Os cabeçalhos incluem CSP, bloqueio de iframe, nosniff, restrição de permissões, política de referência e HSTS somente para o hostname atual. Execute `npm run test:security` com Playwright disponível para validar as proteções no Chromium usando respostas locais com os cabeçalhos de produção.
+
+Publicar apenas `dist/`. Os cabeçalhos HTTP não são aplicados ao abrir `src/index.html` por file://. A CSP permite os domínios documentados para a tag Google Ads e os blocos inline autorizados por hash. Google Analytics e integrações futuras exigem revisão explícita da CSP. Consulte `docs/revisao-seguranca.md` para escopo e limitações da revisão.

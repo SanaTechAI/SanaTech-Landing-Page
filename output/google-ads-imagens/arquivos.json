@@ -1,0 +1,30 @@
+[
+  {
+    "file": "sanatech-paisagem-1200x628.jpg",
+    "width": 1200,
+    "height": 628,
+    "bytes": 140412,
+    "kb": 137
+  },
+  {
+    "file": "sanatech-quadrada-1200x1200.jpg",
+    "width": 1200,
+    "height": 1200,
+    "bytes": 236316,
+    "kb": 231
+  },
+  {
+    "file": "sanatech-retrato-960x1200.jpg",
+    "width": 960,
+    "height": 1200,
+    "bytes": 195163,
+    "kb": 191
+  },
+  {
+    "file": "sanatech-vertical-1080x1920.jpg",
+    "width": 1080,
+    "height": 1920,
+    "bytes": 233711,
+    "kb": 228
+  }
+]

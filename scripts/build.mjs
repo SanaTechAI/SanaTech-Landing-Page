@@ -1,6 +1,7 @@
-import { readFile, writeFile, mkdir, cp } from 'node:fs/promises';
+import { readFile, writeFile, mkdir, cp, rm, lstat } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
+import {securityHeaders} from './security.mjs';
 const root=fileURLToPath(new URL('../',import.meta.url));
 export function contactValues(c){
  const esc=s=>String(s).replace(/[&<>"']/g,x=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[x]));
@@ -33,27 +34,39 @@ export async function build(){
   for(const [marker,attribute] of [['content','content'],['href','href'],['src','src']]){
    markup=markup.replace(new RegExp('<[a-z][^>]*data-site-'+marker+'="(\\w+)"[^>]*>','g'),(tag,key)=>{
     if(!(key in v))throw Error('Configuração desconhecida: '+key);
-    return tag.replace(new RegExp('\\s'+attribute+'="[^"]*"'),' '+attribute+'="'+v[key]+'"');
+    return tag.replace(new RegExp('\\s'+attribute+'="[^"]*"'),()=> ' '+attribute+'="'+v[key]+'"');
    });
   }
   markup=markup.replace(/<([a-z][a-z0-9]*)\b([^>]*data-site-text="(\w+)"[^>]*)>[\s\S]*?<\/\1>/g,(_,tag,attrs,key)=>{
    if(!(key in v))throw Error('Configuração desconhecida: '+key);
    return '<'+tag+attrs+'>'+v[key]+'</'+tag+'>';
   });
-  markup=markup.replace(/<div id="optional-contacts">[\s\S]*?<\/div>/g,'<div id="optional-contacts">'+v.optionalContacts+'</div>');
+  markup=markup.replace(/<div id="optional-contacts">[\s\S]*?<\/div>/g,()=>'<div id="optional-contacts">'+v.optionalContacts+'</div>');
   if(markup.includes('{{'))throw Error('O HTML contém uma variável não resolvida.');
   return markup;
  };
  // Keep the source directly usable, including after configuration changes.
  await writeFile(path.join(root,'src/index.html'),render(source,{...values,robots:'noindex, nofollow'}));
- const html=render(source,values).replaceAll('href="../assets/','href="assets/');
- const out=path.join(root,'dist');await mkdir(out,{recursive:true});
- for(const folder of ['styles','scripts'])await cp(path.join(root,'src',folder),path.join(out,folder),{recursive:true});
+ const html=render(source,{...values,logoSrc:'assets/logo-brain.webp'}).replaceAll('href="../assets/','href="assets/');
+ const out=path.resolve(root,'dist');
+ // Only rebuild the exact generated directory, never a redirected directory.
+ if(path.relative(root,out)!=='dist')throw Error('Diretório de build inseguro.');
+ const info=await lstat(out).catch(error=>{if(error.code==='ENOENT')return null;throw error;});
+ if(info?.isSymbolicLink())throw Error('dist não pode ser um link simbólico.');
+ await rm(out,{recursive:true,force:true});
+ await mkdir(out,{recursive:true});
+ const publicFiles={styles:['tokens.css','components.css','motion.css'],scripts:['navigation.js','reveal.js','effects.js']};
+ for(const [folder,files]of Object.entries(publicFiles)){
+  await mkdir(path.join(out,folder),{recursive:true});
+  for(const file of files)await cp(path.join(root,'src',folder,file),path.join(out,folder,file));
+ }
  await writeFile(path.join(out,'styles/tokens.css'),(await readFile(path.join(root,'src/styles/tokens.css'),'utf8')).replaceAll('../../assets/','../assets/'));
  await mkdir(path.join(out,'assets'),{recursive:true});
- await cp(path.join(root,'assets/fonts'),path.join(out,'assets/fonts'),{recursive:true});
- for(const file of ['logo-brain.png','favicon.svg','favicon.png','favicon.ico','apple-touch-icon.png'])await cp(path.join(root,'assets',file),path.join(out,'assets',file));
+ await mkdir(path.join(out,'assets/fonts'),{recursive:true});
+ for(const file of ['space-grotesk-variable.ttf','dm-sans-regular.woff2','dm-sans-bold.woff2','Space-Grotesk-LICENSE.txt','DM-Sans-LICENSE.txt'])await cp(path.join(root,'assets/fonts',file),path.join(out,'assets/fonts',file));
+ for(const file of ['logo-brain.png','logo-brain.webp','favicon.svg','favicon.png','favicon.ico','apple-touch-icon.png'])await cp(path.join(root,'assets',file),path.join(out,'assets',file));
  await writeFile(path.join(out,'index.html'),html);
+ await writeFile(path.join(out,'_headers'),'/*\n'+Object.entries(securityHeaders(html)).map(([name,value])=>'  '+name+': '+value).join('\n')+'\n');
  await writeFile(path.join(out,'robots.txt'),production?`User-agent: *\nAllow: /\nSitemap: ${url}sitemap.xml\n`:'User-agent: *\nDisallow: /\n');
  await writeFile(path.join(out,'sitemap.xml'),`<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${production?`<url><loc>${esc(url)}</loc></url>`:''}</urlset>`);
  console.log('Build concluído: dist ('+(production?'produção':'revisão, noindex')+'). Contatos pendentes: '+pending.join(', '));
