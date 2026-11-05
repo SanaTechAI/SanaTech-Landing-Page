@@ -37,7 +37,17 @@ A antiga animação em `src/scripts/motion.js` permanece como arquivo de referê
 
 Com Playwright e Chrome disponíveis, mantenha a prévia aberta e execute `npm test`. `PLAYWRIGHT_PATH` permite indicar um pacote externo, e `TEST_URL` muda a URL da prévia.
 
-Os testes verificam 12 larguras de 320 a 1920 px, texto ampliado em 200%, carregamento de fontes e imagens, menu e teclado, âncoras, favicons, mensagens de e-mail, contatos opcionais, ausência de preços, metadados de produção, movimento reduzido e leitura sem JavaScript. A página foi preparada com uma oferta e chamada para ação claras; resultados de anúncios e conversões precisam ser medidos após publicação. A tag-base Google Ads AW-18525878213 está instalada; o evento de conversão do WhatsApp e o Google Analytics ainda não estão configurados.
+Os testes verificam 12 larguras de 320 a 1920 px, texto ampliado em 200%, carregamento de fontes e imagens, menu e teclado, âncoras, favicons, mensagens de e-mail, contatos opcionais, ausência de preços, metadados de produção, movimento reduzido e leitura sem JavaScript. A página foi preparada com uma oferta e chamada para ação claras; resultados de anúncios e conversões precisam ser medidos após publicação. A tag-base Google Ads AW-18525878213 e o evento de clique no WhatsApp estão instalados. Google Analytics não está configurado.
+
+## Conversão do WhatsApp
+
+`src/scripts/conversions.js`, carregado no head após a tag-base, envia `conversion` para `AW-18525878213/FT4PCOLrpbIdEMXv6YFF` quando um dos quatro links do WhatsApp é ativado. O evento mede intenção de contato: não confirma mensagem enviada, avaliação agendada ou venda. A função `gtag_report_conversion` usa listeners externos compatíveis com a CSP, sem atributos onclick inline e sem ampliar as permissões de script.
+
+Links na mesma aba aguardam o callback da tag por no máximo um segundo; se ela falhar, o WhatsApp abre mesmo assim. Abertura em nova aba, cliques com modificadores e teclado preservam o comportamento dos links. E-mail, navegação e carregamento da página não disparam essa conversão. O código não altera a URL de entrada nem remove GCLID.
+
+Depois de `npm run build:production`, execute `npm run test:conversions` com `PLAYWRIGHT_PATH` configurado. O teste cobre os quatro links, o ID/rótulo, disparos únicos, fallback, CSP, GCLID, HTML fonte e ausência de JavaScript. Requisições externas são interceptadas para não enviar conversões de teste ao Google.
+
+Na conta Google Ads, concluir a criação da ação e conferir que a campanha usa a meta Contato. Após validar o evento publicado, manter Visualização de página como secundária para que a otimização priorize o clique de contato. Essa configuração da conta não é feita pelo código do site.
 
 ## Animações ao rolar
 

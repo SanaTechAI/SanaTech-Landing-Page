@@ -8,6 +8,7 @@
     "build:production": "node scripts/build.mjs --production",
     "preview": "node scripts/serve.mjs",
     "test": "node scripts/verify.mjs",
-    "test:security": "node scripts/verify-security.mjs"
+    "test:security": "node scripts/verify-security.mjs",
+    "test:conversions": "node scripts/verify-conversions.mjs"
   }
 }

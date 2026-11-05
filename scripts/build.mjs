@@ -55,7 +55,7 @@ export async function build(){
  if(info?.isSymbolicLink())throw Error('dist não pode ser um link simbólico.');
  await rm(out,{recursive:true,force:true});
  await mkdir(out,{recursive:true});
- const publicFiles={styles:['tokens.css','components.css','motion.css'],scripts:['navigation.js','reveal.js','effects.js']};
+ const publicFiles={styles:['tokens.css','components.css','motion.css'],scripts:['navigation.js','reveal.js','effects.js','conversions.js']};
  for(const [folder,files]of Object.entries(publicFiles)){
   await mkdir(path.join(out,folder),{recursive:true});
   for(const file of files)await cp(path.join(root,'src',folder,file),path.join(out,folder,file));

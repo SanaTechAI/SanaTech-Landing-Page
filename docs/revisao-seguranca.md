@@ -47,8 +47,12 @@ O código da landing page não impede spam, tentativas de phishing, roubo de con
 
 A pedido do proprietário, a tag-base AW-18525878213 foi incluída no head do HTML. A CSP foi atualizada com os domínios de script, imagem, conexão e frame documentados pelo Google para Ads e com o hash exato do bloco de inicialização. Continua sem unsafe-inline/unsafe-eval e mantém bloqueio de incorporação por outras páginas. A declaração anterior sobre ausência de scripts/rastreamento externo descreve o estado anterior à instalação.
 
-O teste de segurança usa uma resposta simulada para gtag.js e verifica a inicialização de AW-18525878213 sem transmitir eventos reais. O recebimento no Google Ads precisa ser validado após a publicação. Não foi criado evento de conversão: falta o rótulo fornecido pelo Google Ads.
+O teste de segurança usa uma resposta simulada para gtag.js e verifica a inicialização de AW-18525878213 sem transmitir eventos reais. O recebimento no Google Ads precisa ser validado após a publicação. A instalação inicial incluía somente a tag-base; o evento de clique foi acrescentado na atualização abaixo.
 
 Fonte: https://developers.google.com/tag-platform/security/guides/csp
 
 Validação final com a biblioteca pública real gtag.js: identificado carregamento de script em https://googleads.g.doubleclick.net/pagead/. Esse caminho específico foi incluído em script-src, e o teste de segurança passou a cobrir esse carregamento. Requisições de medição foram interceptadas localmente; o teste não enviou conversões ao Google.
+
+## Atualização — conversão de clique no WhatsApp (2026-11-04)
+
+O rótulo FT4PCOLrpbIdEMXv6YFF foi fornecido pelo proprietário. O evento usa `scripts/conversions.js`, autorizado por script-src self, sem novos scripts inline, atributos onclick ou permissões externas. A lista pública do build inclui esse arquivo. O teste `npm run test:conversions` aplica os cabeçalhos de produção e verifica que falhas ou bloqueios da tag não impedem o contato. As medições de teste são interceptadas localmente.

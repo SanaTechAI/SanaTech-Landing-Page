@@ -181,7 +181,11 @@ Exemplo ilustrativo; o Google pode selecionar outras combinações e quantidades
 
 ## Medição antes de investir
 
-A tag-base Google Ads AW-18525878213 foi instalada no fonte e no build. O evento específico de conversão ainda não foi configurado: falta o rótulo da conversão (conversion label) fornecido pelo Google Ads. Após publicar e validar a tag-base, configurar a medição do clique no WhatsApp como sinal de intenção e acompanhar separadamente conversas recebidas, avaliações agendadas e projetos contratados. Clique no botão não comprova mensagem enviada ou lead qualificado. Decidir pelos contatos e negócios gerados, não apenas pela taxa de cliques. Não há promessa de custo por clique, volume de leads ou retorno.
+A tag-base Google Ads AW-18525878213 e o evento de conversão `AW-18525878213/FT4PCOLrpbIdEMXv6YFF` estão instalados no fonte e no build. A ação "Clique no Whatsapp" dispara nos quatro links do WhatsApp, com abertura do contato preservada caso a tag falhe. E-mail e carregamento da página não disparam essa ação.
+
+Após publicar, validar o evento com o Assistente de tags e conferir em Google Ads que a ação está concluída, tem contagem Uma e é primária na meta Contato usada pela campanha. Contato foi informado como uma meta que não é padrão da conta: revisar sua inclusão na campanha. Deixar Visualização de página como secundária após validar a medição de contato. Essas configurações da conta não são alteradas pelo build.
+
+Acompanhar separadamente conversas recebidas, avaliações agendadas e projetos contratados. Clique no botão não comprova mensagem enviada ou lead qualificado. Decidir pelos contatos e negócios gerados, não apenas pela taxa de cliques. Não há promessa de custo por clique, volume de leads ou retorno.
 
 ## Fontes oficiais consultadas
 
